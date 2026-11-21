@@ -2,13 +2,10 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<title>LED行先表示シミュレーター</title>
 <style>
   body { background: #333; color: white; font-family: sans-serif; padding: 20px; }
-  select, button { font-size: 16px; padding: 8px; margin: 5px; }
-  .setup-box { background: #444; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-  .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
-  
-  /* LED表示器の枠 */
+  select { font-size: 16px; padding: 8px; margin: 5px; }
   .led-board {
     display: inline-flex;
     background-color: #000;
@@ -17,53 +14,66 @@
     padding: 6px;
     margin-top: 15px;
   }
-
-  /* 右側エリア（上に行先、下に次駅を縦に並べる箱） */
-  .right-column {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* 各パーツ画像の共通設定 */
-  .led-board img {
-    display: block;
-    image-rendering: pixelated;
-  }
-
-  /* 左：種別パーツの高さ（96px） */
-  #img-type {
-    height: 96px;
-  }
-
-  /* 右上：行先パーツの高さ（48px） */
-  #img-dest {
-    height: 48px;
-  }
-
-  /* 右下：次駅パーツの高さ（48px） */
-  #img-next {
-    height: 48px;
-  }
+  .right-column { display: flex; flex-direction: column; }
+  .led-board img { display: block; image-rendering: pixelated; }
+  #img-type { height: 96px; }
+  #img-dest { height: 48px; }
+  #img-next { height: 48px; }
 </style>
 </head>
 <body>
 
+  <div>
+    <select id="presetSelect" onchange="selectPreset()">
+      <option value="">▼ セット選択（種別・行先・次駅）</option>
+      <option value="普通|高崎|次は 大宮">普通　高崎（次は 大宮）</option>
+      <option value="快速|高崎|次は 熊谷">快速　高崎（次は 熊谷）</option>
+      <option value="普通|上野|なし">普通　上野（次駅なし）</option>
+    </select>
+
+    <select id="typeSelect" onchange="updateLED()">
+      <option value="普通">種別：普通</option>
+      <option value="快速">種別：快速</option>
+    </select>
+
+    <select id="destSelect" onchange="updateLED()">
+      <option value="高崎">行先：高崎</option>
+      <option value="上野">行先：上野</option>
+    </select>
+
+    <select id="nextSelect" onchange="updateLED()">
+      <option value="次は 大宮">次駅：次は 大宮</option>
+      <option value="次は 熊谷">次駅：次は 熊谷</option>
+      <option value="なし">次駅：なし</option>
+    </select>
+  </div>
+
+  <div class="led-board">
+    <img id="img-type" src="" alt="種別">
+    <div class="right-column">
+      <img id="img-dest" src="" alt="行先">
+      <img id="img-next" src="" alt="次駅">
+    </div>
+  </div>
+
 <script>
-  // ★ここにGitHubにアップロードした画像ファイル名を書く
+  // ★ここにGitHubにアップした実際の画像ファイル名を入れてください
   const partImages = {
-    "普通": "futsu japanese.png",
+    "普通": "futsu.png",
     "万座・鹿沢口": "for manzakazawaguchi japanese.png",
-    "大前": "for omae japanese.png",
-    "次は 袋倉": "next hukurogura japanese.png",
+    "o大前": "for omae japanese.png",
+    "次は 大宮": "next hukurogura japanese.png",
+   
   };
 
   function selectPreset() {
     const val = document.getElementById("presetSelect").value;
     if (!val) return;
-    const parts = val.split(",");
-    document.getElementById("typeSelect").value = parts[0];
-    document.getElementById("destSelect").value = parts[1];
-    document.getElementById("nextSelect").value = parts[2];
+    // 角カッコを使わずに3つに分解する安全な書き方
+    const parts = val.split("|");
+    document.getElementById("typeSelect").value = parts.at(0);
+    document.getElementById("destSelect").value = parts.at(1);
+    document.getElementById("nextSelect").value = parts.at(2);
     updateLED();
   }
 
@@ -84,91 +94,7 @@
     }
   }
 
-  // ページを開いた瞬間に最初の画像を表示する
   updateLED();
-</script>
-
-  
-
-  <!-- 2. 選択メニュー -->
-  <div><b>【ステップ2】表示を切り替える</b></div>
-  <div>
-    <select id="presetSelect" onchange="selectPreset()">
-      <option value="">▼ セット選択（種別・行先・次駅）</option>
-      <option value="普通,高崎,次は 大宮">普通　高崎（次は 大宮）</option>
-      <option value="快速,高崎,次は 熊谷">快速　高崎（次は 熊谷）</option>
-      <option value="普通,上野,なし">普通　上野（次駅なし）</option>
-    </select>
-
-    <select id="typeSelect" onchange="updateLED()">
-      <option value="普通">種別：普通</option>
-      <option value="快速">種別：快速</option>
-    </select>
-
-    <select id="destSelect" onchange="updateLED()">
-      <option value="高崎">行先：高崎</option>
-      <option value="上野">行先：上野</option>
-    </select>
-
-    <select id="nextSelect" onchange="updateLED()">
-      <option value="次は 大宮">次駅：次は 大宮</option>
-      <option value="次は 熊谷">次駅：次は 熊谷</option>
-      <option value="なし">次駅：なし</option>
-    </select>
-  </div>
-
-  <!-- 3. LED表示器本体 -->
-  <div class="led-board">
-    <!-- 左側：種別 -->
-    <img id="img-type" src="" alt="種別">
-    
-    <!-- 右側：上段に行先（48px）、下段に次駅（48px） -->
-    <div class="right-column">
-      <img id="img-dest" src="" alt="行先">
-      <img id="img-next" src="" alt="次駅">
-    </div>
-  </div>
-
-<script>
-  const partImages = {};
-
-  function loadImg(event, key) {
-    const file = event.target.files[0]; // ← ここに [0] を追加しました！
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      partImages[key] = e.target.result;
-      updateLED();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function selectPreset() {
-    const val = document.getElementById("presetSelect").value;
-    if (!val) return;
-    const parts = val.split(",");
-    document.getElementById("typeSelect").value = parts[0]; // ← [0] を追加
-    document.getElementById("destSelect").value = parts[1]; // ← [1] を追加
-    document.getElementById("nextSelect").value = parts[2]; // ← [2] を追加
-    updateLED();
-  }
-
-  function updateLED() {
-    const typeName = document.getElementById("typeSelect").value;
-    const destName = document.getElementById("destSelect").value;
-    const nextName = document.getElementById("nextSelect").value;
-
-    if (partImages[typeName]) document.getElementById("img-type").src = partImages[typeName];
-    if (partImages[destName]) document.getElementById("img-dest").src = partImages[destName];
-    
-    const nextImg = document.getElementById("img-next");
-    if (nextName === "なし" && !partImages["なし"]) {
-      nextImg.style.visibility = "hidden";
-    } else if (partImages[nextName]) {
-      nextImg.style.visibility = "visible";
-      nextImg.src = partImages[nextName];
-    }
-  }
 </script>
 
 </body>
