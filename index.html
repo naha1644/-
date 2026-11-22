@@ -4,57 +4,55 @@
 <meta charset="UTF-8">
 <title>LED行先表示シミュレーター</title>
 <style>
-    /* ▼ 1. ステンレス車体と帯（オビ） ▼ */
+  body { background: #333; color: white; font-family: sans-serif; padding: 20px; }
+  select { font-size: 16px; padding: 8px; margin: 5px; }
+
+  /* ① ステンレス車体と帯（背景の図形） */
   .train-body {
-    /* 上から：銀色ステンレス → 緑帯 → オレンジ帯 → 銀色ステンレス */
-    background: linear-gradient(
-      180deg,
-      #cfd5dc 0%,
-      #cfd5dc 18%,
-      #008b45 18%,
-      #008b45 26%,
-      #ff6600 26%,
-      #ff6600 32%,
-      #cfd5dc 32%,
-      #b8c0c8 100%
-    );
-    padding: 30px 40px;
+    background: linear-gradient(180deg, #cfd5dc 0%, #b8c0c8 100%);
+    padding: 30px 0;
     border-radius: 8px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
     margin-top: 20px;
   }
 
-  /* ▼ 2. 表示器の外側の窓（黒いガラス枠） ▼ */
-  .window-frame {
-    background-color: #111;
-    padding: 12px;
-    border-radius: 12px;
+  /* ② 左右の帯 */
+  .side-stripe {
+    width: 70px;
+    height: 56px;
+    background: linear-gradient(
+      180deg,
+      #008b45 0%,
+      #008b45 55%,
+      #ff6600 55%,
+      #ff6600 100%
+    );
   }
 
-  /* ▼ 3. LED本体 ▼ */
- .led-board {
+  /* ③ 外側の窓（黒いガラス部分のみ・フチ線なし） */
+  .window-frame {
+    background-color: #000;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  /* ④ LED本体（枠も余白も一切なし！画像だけ） */
+  .led-board {
     display: inline-flex;
     padding: 0;
     margin: 0;
     border: none;
   }
 
-  body { background: #333; color: white; font-family: sans-serif; padding: 20px; }
-  select { font-size: 16px; padding: 8px; margin: 5px; }
-  .led-board {
-    display: inline-flex;
-    background-color: #000;
-    border: 8px solid #555;
-    border-radius: 6px;
-    padding: 6px;
-    margin-top: 15px;
-  }
   .right-column { display: flex; flex-direction: column; }
   .led-board img { display: block; image-rendering: pixelated; }
   #img-type { height: 96px; }
   #img-dest { height: 48px; }
   #img-next { height: 48px; }
 </style>
+
 </head>
 <body>
 
